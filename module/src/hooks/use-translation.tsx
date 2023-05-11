@@ -1,6 +1,6 @@
 
 import { useRouter } from 'next/router';
-import i18n from './../index';
+import { i18n } from '../index';
 import { Dictionary, I18N } from '../types';
 import useSelectedLanguage from './use-selected-language';
 import Mustache from 'mustache';

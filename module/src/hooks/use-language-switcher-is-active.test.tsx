@@ -4,7 +4,6 @@
 import { cleanup, renderHook } from '@testing-library/react';
 import useLanguageSwitcherIsActive from './use-language-switcher-is-active';
 
-
 jest.mock('./../../../i18n/index', () => {
 	return {
 		__esModule: true,
@@ -28,20 +27,31 @@ jest.mock('next/router', () => ({
 
 const useRouter = jest.spyOn(require('next/router'), 'useRouter');
 
-beforeEach(() => { });
 afterEach(() => {
 	cleanup();
 	jest.clearAllMocks();
 });
 
 describe('The hook returns ', () => {
-	it(`true if there is no query at the router and the param equals the default language `, async () => {
+  afterEach(() => {
+    cleanup();
+    jest.clearAllMocks();
+  });
+
+	it(`true if there is no query at the router and the param equals the default language`, async () => {
 		useRouter.mockImplementation(() => ({
 			query: null,
 		}));
-		const { result } = renderHook(() => useLanguageSwitcherIsActive('mock'));
+    const { result } = renderHook(() => useLanguageSwitcherIsActive('mock'));
 		expect(result.current.isActive).toBe(true);
 	});
+
+  it(`true if there is no lang at the localStorage and the param equals the default language`, async () => {
+    jest.requireMock('./../../../i18n/index').i18n.languageDataStore = 'localStorage';
+    jest.spyOn(window.localStorage, 'getItem').mockReturnValue(null);
+    const { result } = renderHook(() => useLanguageSwitcherIsActive('mock'));
+    expect(result.current.isActive).toBe(true);
+  });
 
 	it(`false if there is no query at the router and the param does not equal the default language `, async () => {
 		useRouter.mockImplementation(() => ({

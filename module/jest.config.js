@@ -13,7 +13,9 @@ module.exports = {
     "^src(.*)$": "<rootDir>/src$1",
   },
   testPathIgnorePatterns: ["/dist/*"],
+  resetMocks: false,
   setupFilesAfterEnv: [
+    "<rootDir>/setupTests.js"
     // '@testing-library/react/cleanup-after-each',
     // '@testing-library/jest-dom/extend-expect',
   ],

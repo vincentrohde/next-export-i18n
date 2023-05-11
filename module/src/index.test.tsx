@@ -2,7 +2,7 @@
  * @jest-environment jsdom
  */
 import { i18n as userland } from "./../../i18n/index";
-import index from "./index";
+import { i18n } from "./index";
 import { I18N } from "./types";
 const navigator = {
   language: "es",
@@ -44,7 +44,7 @@ describe("Without window.navigator", () => {
   });
   describe("The main file returns ", () => {
     it(`should preserve the defaultLanguage window.navigator is undefined `, async () => {
-      const i18nObj = index() as I18N;
+      const i18nObj = i18n() as I18N;
       expect(i18nObj.defaultLang).toStrictEqual("mock");
     });
   });
@@ -66,7 +66,7 @@ describe("With window.navigator", () => {
 
   describe("The main file returns ", () => {
     it(`the data from 'i18n/index.js'`, async () => {
-      const i18nObj = index() as I18N;
+      const i18nObj = i18n() as I18N;
       expect(i18nObj).toStrictEqual(mockedData);
     });
 
@@ -76,7 +76,7 @@ describe("With window.navigator", () => {
       //@ts-ignore
       global.navigator.language = "invalid";
 
-      const i18nObj = index() as I18N;
+      const i18nObj = i18n() as I18N;
       expect(i18nObj.defaultLang).toStrictEqual("mock");
       //@ts-ignore
       global.navigator.language = originalLang;
@@ -88,7 +88,7 @@ describe("With window.navigator", () => {
       //@ts-ignore
       global.navigator.language = "foo-US";
 
-      const i18nObj = index() as I18N;
+      const i18nObj = i18n() as I18N;
       expect(i18nObj.defaultLang).toStrictEqual("foo");
       //@ts-ignore
       global.navigator.language = originalLang;
@@ -102,7 +102,7 @@ describe("With window.navigator", () => {
       //@ts-ignore
       global.navigator.languages = ["foo-US", "fr-fr", "es-es"];
 
-      const i18nObj = index() as I18N;
+      const i18nObj = i18n() as I18N;
       expect(i18nObj.defaultLang).toStrictEqual("foo");
       //@ts-ignore
       global.navigator.language = originalLang;
@@ -115,7 +115,7 @@ describe("With window.navigator", () => {
       //@ts-ignore
       global.navigator.language = "foo-US";
 
-      const i18nObj = index() as I18N;
+      const i18nObj = i18n() as I18N;
       expect(i18nObj.defaultLang).toStrictEqual("mock");
       //@ts-ignore
       global.navigator.language = originalLang;
@@ -126,7 +126,7 @@ describe("With window.navigator", () => {
     it("there are not translations set", async () => {
       userland["translations"] = {} as unknown as any;
       expect(() => {
-        index();
+        i18n();
       }).toThrow(
         `Missing translations. Did you import and add the tranlations in 'i18n/index.js'`
       );
@@ -135,7 +135,7 @@ describe("With window.navigator", () => {
     it("the defined default language is not present in the translations object", async () => {
       userland["defaultLang"] = "invalid";
       expect(() => {
-        index();
+        i18n();
       }).toThrow(
         `Invalid default language 'invalid'. Check your 'defaultLang' in 'i18n/index.js'?`
       );
@@ -144,7 +144,7 @@ describe("With window.navigator", () => {
     it("the default language is not set", async () => {
       userland["defaultLang"] = "";
       expect(() => {
-        index();
+        i18n();
       }).toThrow(
         `Missing default language. Did you set 'defaultLang' in 'i18n/index.js'?`
       );

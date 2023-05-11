@@ -45,7 +45,7 @@ const getDefaultLanguage = (userI18n: I18N): string => {
  * to the custom hooks
  * @returns the translations and the default language as defined in "i18n/index"
  */
-const i18n = (): I18N | Error => {
+export const i18n = (): I18N | Error => {
   // cast to be typsafe
   const userI18n = userland as I18N;
 
@@ -82,5 +82,3 @@ const i18n = (): I18N | Error => {
 
   return userI18n;
 };
-
-export default i18n;

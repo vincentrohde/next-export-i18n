@@ -1,11 +1,23 @@
 {
   "name": "next-export-i18n",
-  "files": ["index.js", "index.d.ts", "README.md", "LICENSE", "package.json"],
-
+  "files": [
+    "index.js",
+    "index.d.ts",
+    "README.md",
+    "LICENSE",
+    "package.json"
+  ],
   "main": "index.js",
   "version": "2.2.0",
   "description": "Internationalize next.js with true support for next export",
-  "keywords": ["next.js", "react.js", "typescript", "i18n", "export", "ssg"],
+  "keywords": [
+    "next.js",
+    "react.js",
+    "typescript",
+    "i18n",
+    "export",
+    "ssg"
+  ],
   "author": "Martin Krause <oss@mkrause.info> (http://mkrause.info/)",
   "license": "MIT",
   "scripts": {},
@@ -17,7 +29,9 @@
     "react": "^18.0.0",
     "react-dom": "^18.0.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "jest-localstorage-mock": "^2.4.26"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/martinkr/next-export-i18n.git"

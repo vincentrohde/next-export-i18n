@@ -8,7 +8,7 @@ import useSelectedLanguage from './hooks/use-selected-language';
 import useLanguageSwitcherIsActive from './hooks/use-language-switcher-is-active';
 import { useTranslation } from './hooks/use-translation';
 import LanguageSwitcher from './components/language-switcher';
-import i18n from "./index.js";
+import { i18n } from "./index.js";
 
 import { Dictionary, I18N } from './types';
 

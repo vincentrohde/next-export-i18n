@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 import { useCallback, useEffect, useState } from 'react';
-import i18n from './../index';
+import { i18n } from './../index';
 import { I18N } from '../types';
 import { LanguageDataStore } from '../enums/languageDataStore';
 
@@ -51,10 +51,10 @@ export default function useSelectedLanguage()  {
     handleLocalStorageUpdate();
 
     // Listen for local-storage changes
-    document.addEventListener('localStorageLangChange', handleLocalStorageUpdate);
+    window.addEventListener('localStorageLangChange', handleLocalStorageUpdate);
 
     return () => {
-      document.removeEventListener('localStorageLangChange', handleLocalStorageUpdate);
+      window.removeEventListener('localStorageLangChange', handleLocalStorageUpdate);
     }
 
   }, [handleLocalStorageUpdate]);

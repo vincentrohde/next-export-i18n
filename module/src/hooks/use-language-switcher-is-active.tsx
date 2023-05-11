@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import i18n from '../index';
+import { i18n } from '../index';
 import { I18N } from '../types';
 import { LanguageDataStore } from '../enums/languageDataStore';
 
