@@ -1,0 +1,11 @@
+{
+  "language_tag": "de",
+  "default": "true",
+  "i18n": {
+    "landing": {
+      "welcome": {
+        "contactMe": "Kontakt"
+      }
+    }
+  }
+}

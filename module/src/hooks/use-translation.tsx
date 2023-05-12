@@ -13,7 +13,6 @@ import Mustache from 'mustache';
  * @returns t(key: string): any function
  */
 const useTranslation = () => {
-	const router = useRouter();
 	let i18nObj: I18N;
 
 	i18nObj = i18n() as I18N;

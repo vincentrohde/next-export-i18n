@@ -1,5 +1,4 @@
-// import { Dictionary, I18N } from 'next-export-i18n/types';
-import { Dictionary, I18N } from "../module/src/types/index";
+import { Dictionary, I18N } from "../module/src/types";
 
 // @ts-ignore
 import de from "./translations.de.yaml";
