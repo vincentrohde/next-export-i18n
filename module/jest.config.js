@@ -7,6 +7,7 @@ module.exports = {
       // using a custom tsconfig file
       tsconfig: "tsconfig.jest.json",
     },
+    window: {}
   },
   moduleDirectories: ["node_modules", "<rootDir>/node_modules", "."],
   moduleNameMapper: {
