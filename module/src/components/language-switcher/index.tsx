@@ -5,6 +5,8 @@ import useLanguageSwitcherIsActive from '../../hooks/use-language-switcher-is-ac
 import { i18n } from '../../index';
 import { I18N } from '../../types';
 import { LanguageDataStore } from '../../enums/languageDataStore';
+import { setLanguageInLocalStorage } from '../../utils/setLanguageInLocalStorage';
+import { setRouterQuery } from '../../utils/setRouterQuery';
 
 type Props = {
 	lang: string,
@@ -25,9 +27,8 @@ type Dict = { [key: string]: string };
  * @param [shallow] enable or disable shallow routing, @see https://nextjs.org/docs/routing/shallow-routing
  */
 const LanguageSwitcher = ({ lang, children, shallow=false }: Props) => {
-
 	// state indicating if this component's target language matches the currently selected
-	const { isActive: languageSwitcherIsActive } = useLanguageSwitcherIsActive(lang);
+  const { isActive: languageSwitcherIsActive } = useLanguageSwitcherIsActive(lang);
 
 	// necessary for updating the router's query parameter inside the click handler
 	const router = useRouter();
@@ -41,21 +42,11 @@ const LanguageSwitcher = ({ lang, children, shallow=false }: Props) => {
 	 */
 	const handleLanguageChange = () => {
     if (languageDataStore === LanguageDataStore.QUERY) {
-      router.push(
-        {
-          pathname: router.pathname,
-          query,
-        },
-        undefined,
-        { shallow: shallow }
-      );
+      void setRouterQuery({ router, query, shallow });
     }
 
     if (languageDataStore === LanguageDataStore.LOCAL_STORAGE) {
-      window.localStorage.setItem('lang', lang);
-
-      const event = new Event("localStorageLangChange");
-      document.dispatchEvent(event);
+      setLanguageInLocalStorage(lang);
     }
 	};
 

@@ -7,6 +7,11 @@ import userEvent from '@testing-library/user-event';
 import React from 'react';
 import LanguageSwitcher from './index';
 
+import { setRouterQuery } from '../../utils/setRouterQuery';
+import { setLanguageInLocalStorage } from '../../utils/setLanguageInLocalStorage';
+
+jest.mock('../../utils/setRouterQuery');
+jest.mock('../../utils/setLanguageInLocalStorage');
 
 jest.mock('../../../../i18n/index', () => {
 	return {
@@ -36,9 +41,11 @@ jest.mock('next/router', () => ({
 		};
 	},
 }));
+
 const useRouter = jest.spyOn(require('next/router'), 'useRouter');
 const push = jest.fn();
-useRouter.mockImplementation(() => ({ push }));
+const router = { push };
+useRouter.mockImplementation(() => (router));
 
 jest.mock('../../hooks/use-selected-language', () => {
 	return {
@@ -51,69 +58,70 @@ const useSelectedLanguage = jest.spyOn(
 	require('../../hooks/use-selected-language'),
 	'default'
 );
+
 beforeEach(() => {
-	useSelectedLanguage.mockImplementation(() => ({
-		lang: 'mock',
-	}));
+  useSelectedLanguage.mockImplementation(() => ({
+    lang: 'mock',
+  }));
 });
 
 afterEach(() => {
-	cleanup();
-	jest.clearAllMocks();
+  cleanup();
+  jest.clearAllMocks();
 });
+
+function getQuery(lang: string) {
+  return { lang }
+}
 
 describe('The LanguageSwitcher Component ', () => {
 	it('is rendered to the document', async () => {
 		const lang = 'languageKey';
+
 		render(<LanguageSwitcher lang={lang} />);
+
 		const component = await screen.findByRole('button', {
 			name: `set language to ${lang}`,
 		});
+
 		expect(component).toBeInTheDocument();
 	});
 
 	it('updates the language param with the passed param on click', async () => {
 		const lang = 'languageKey';
+    const shallow = false;
+
 		render(<LanguageSwitcher lang={lang} />);
+
 		const component = await screen.findByRole('button', {
 			name: `set language to ${lang}`,
 		});
+
 		await userEvent.click(component);
-		expect(push).toHaveBeenCalledWith(
-			{
-				pathname: undefined,
-				query: {
-					lang: lang,
-				},
-			},
-			undefined,
-			{ shallow: false }
-		);
+
+		expect(setRouterQuery).toHaveBeenCalledWith({ router, query: getQuery(lang), shallow });
 	});
 
 	it('updates the language param with the passed param on click and uses shallow routing if shall is passed', async () => {
 		const lang = 'languageKeyShallow';
-		render(<LanguageSwitcher lang={lang} shallow={true} />);
+    const shallow = true;
+
+		render(<LanguageSwitcher lang={lang} shallow={shallow} />);
+
 		const component = await screen.findByRole('button', {
 			name: `set language to ${lang}`,
 		});
+
 		await userEvent.click(component);
-		expect(push).toHaveBeenCalledWith(
-			{
-				pathname: undefined,
-				query: {
-					lang: lang,
-				},
-			},
-			undefined,
-			{ shallow: true }
-		);
+
+    expect(setRouterQuery).toHaveBeenCalledWith({ router, query: getQuery(lang), shallow });
 	});
 });
 
 describe('The LanguageSwitcher Component takes the children prop and ', () => {
 	it('is rendered to the document', async () => {
 		const lang = 'languageKey';
+
 		render(
 			<LanguageSwitcher lang={lang}>
 				<span>
@@ -121,14 +129,17 @@ describe('The LanguageSwitcher Component takes the children prop and ', () => {
 				</span>
 			</LanguageSwitcher>
 		);
+
 		const component = await screen.findByRole('button', {
 			name: `set language to ${lang}`,
 		});
+
 		expect(component).toContainElement(screen.queryByText('child'));
 	});
 
 	it('updates the language param with the passed param on click', async () => {
 		const lang = 'languageKey';
+
 		render(
 			<LanguageSwitcher lang={lang}>
 				<span>
@@ -136,25 +147,20 @@ describe('The LanguageSwitcher Component takes the children prop and ', () => {
 				</span>
 			</LanguageSwitcher>
 		);
+
 		const component = await screen.findByRole('button', {
 			name: `set language to ${lang}`,
 		});
+
 		await userEvent.click(component);
-		expect(push).toHaveBeenCalledWith(
-			{
-				pathname: undefined,
-				query: {
-					lang: lang,
-				},
-			},
-			undefined,
-			{ shallow: false }
-		);
+
+    expect(setRouterQuery).toHaveBeenCalledWith({ router, query: getQuery(lang), shallow: false });
 	});
 
 	it('updates the language param with the passed param on click and preserves an onClick handler', async () => {
 		const lang = 'languageKey';
 		const mySpy = jest.fn();
+
 		render(
 			<LanguageSwitcher lang={lang}>
 				<span onClick={() => mySpy()}>
@@ -162,25 +168,20 @@ describe('The LanguageSwitcher Component takes the children prop and ', () => {
 				</span>
 			</LanguageSwitcher>
 		);
+
 		const component = await screen.findByRole('button', {
 			name: `set language to ${lang}`,
 		});
+
 		await userEvent.click(component);
+
 		expect(mySpy).toHaveBeenCalled();
-		expect(push).toHaveBeenCalledWith(
-			{
-				pathname: undefined,
-				query: {
-					lang: lang,
-				},
-			},
-			undefined,
-			{ shallow: false }
-		);
+    expect(setRouterQuery).toHaveBeenCalledWith({ router, query: getQuery(lang), shallow: false });
 	});
 
 	it('updates the language param with the passed param on click and uses shallow routing if shall is passed', async () => {
 		const lang = 'languageKeyShallow';
+
 		render(
 			<LanguageSwitcher lang={lang} shallow={true}>
 				<span>
@@ -188,19 +189,13 @@ describe('The LanguageSwitcher Component takes the children prop and ', () => {
 				</span>
 			</LanguageSwitcher>
 		);
+
 		const component = await screen.findByRole('button', {
 			name: `set language to ${lang}`,
 		});
+
 		await userEvent.click(component);
-		expect(push).toHaveBeenCalledWith(
-			{
-				pathname: undefined,
-				query: {
-					lang: lang,
-				},
-			},
-			undefined,
-			{ shallow: true }
-		);
+
+    expect(setRouterQuery).toHaveBeenCalledWith({ router, query: getQuery(lang), shallow: true });
 	});
 });
