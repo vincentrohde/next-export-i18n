@@ -74,32 +74,29 @@ function getQuery(lang: string) {
   return { lang }
 }
 
+async function clickLanguageButton(lang: string) {
+  const component = await screen.findByRole('button', {
+    name: `set language to ${lang}`,
+  });
+
+  await userEvent.click(component);
+}
+
 describe('The LanguageSwitcher Component ', () => {
-	it('is rendered to the document', async () => {
-		const lang = 'languageKey';
+  it('it matches the snapshot', async () => {
+    const { container } = render(<LanguageSwitcher lang={'languageKey'} />);
 
-		render(<LanguageSwitcher lang={lang} />);
-
-		const component = await screen.findByRole('button', {
-			name: `set language to ${lang}`,
-		});
-
-		expect(component).toBeInTheDocument();
-	});
+    expect(container).toMatchSnapshot();
+  });
 
 	it('updates the language param with the passed param on click', async () => {
 		const lang = 'languageKey';
-    const shallow = false;
 
 		render(<LanguageSwitcher lang={lang} />);
 
-		const component = await screen.findByRole('button', {
-			name: `set language to ${lang}`,
-		});
+    await clickLanguageButton(lang);
 
-		await userEvent.click(component);
-
-		expect(setRouterQuery).toHaveBeenCalledWith({ router, query: getQuery(lang), shallow });
+		expect(setRouterQuery).toHaveBeenCalledWith({ router, query: getQuery(lang), shallow: false });
 	});
 
 	it('updates the language param with the passed param on click and uses shallow routing if shall is passed', async () => {
@@ -108,34 +105,24 @@ describe('The LanguageSwitcher Component ', () => {
 
 		render(<LanguageSwitcher lang={lang} shallow={shallow} />);
 
-		const component = await screen.findByRole('button', {
-			name: `set language to ${lang}`,
-		});
-
-		await userEvent.click(component);
+    await clickLanguageButton(lang);
 
     expect(setRouterQuery).toHaveBeenCalledWith({ router, query: getQuery(lang), shallow });
 	});
 });
 
 describe('The LanguageSwitcher Component takes the children prop and ', () => {
-	it('is rendered to the document', async () => {
-		const lang = 'languageKey';
+  it('it matches the snapshot', async () => {
+    const { container } = render(
+      <LanguageSwitcher lang={'languageKey'}>
+        <span>
+          <span>child</span>
+        </span>
+      </LanguageSwitcher>
+    );
 
-		render(
-			<LanguageSwitcher lang={lang}>
-				<span>
-					<span>child</span>
-				</span>
-			</LanguageSwitcher>
-		);
-
-		const component = await screen.findByRole('button', {
-			name: `set language to ${lang}`,
-		});
-
-		expect(component).toContainElement(screen.queryByText('child'));
-	});
+    expect(container).toMatchSnapshot();
+  });
 
 	it('updates the language param with the passed param on click', async () => {
 		const lang = 'languageKey';
@@ -148,11 +135,7 @@ describe('The LanguageSwitcher Component takes the children prop and ', () => {
 			</LanguageSwitcher>
 		);
 
-		const component = await screen.findByRole('button', {
-			name: `set language to ${lang}`,
-		});
-
-		await userEvent.click(component);
+    await clickLanguageButton(lang);
 
     expect(setRouterQuery).toHaveBeenCalledWith({ router, query: getQuery(lang), shallow: false });
 	});
@@ -169,11 +152,7 @@ describe('The LanguageSwitcher Component takes the children prop and ', () => {
 			</LanguageSwitcher>
 		);
 
-		const component = await screen.findByRole('button', {
-			name: `set language to ${lang}`,
-		});
-
-		await userEvent.click(component);
+    await clickLanguageButton(lang);
 
 		expect(mySpy).toHaveBeenCalled();
     expect(setRouterQuery).toHaveBeenCalledWith({ router, query: getQuery(lang), shallow: false });
@@ -190,11 +169,7 @@ describe('The LanguageSwitcher Component takes the children prop and ', () => {
 			</LanguageSwitcher>
 		);
 
-		const component = await screen.findByRole('button', {
-			name: `set language to ${lang}`,
-		});
-
-		await userEvent.click(component);
+    await clickLanguageButton(lang);
 
     expect(setRouterQuery).toHaveBeenCalledWith({ router, query: getQuery(lang), shallow: true });
 	});
